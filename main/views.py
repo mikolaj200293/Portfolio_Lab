@@ -1,12 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from django.template.response import TemplateResponse
-from main.models import Category, Institution, Donation
+from main.models import Category, Institution, Donation, MyUser
 from django.core.paginator import Paginator
-
-from django.conf import settings
-
-User = settings.AUTH_USER_MODEL
+from django.contrib.auth import authenticate, login, logout
 
 
 class LandingPage(View):
@@ -49,13 +46,34 @@ class LandingPage(View):
 class AddDonation(View):
 
     def get(self, request):
-        return TemplateResponse(request, 'form.html')
+        if request.user.is_authenticated:
+            return TemplateResponse(request, 'form.html')
+        else:
+            return TemplateResponse(request, 'base.html')
 
 
 class Login(View):
 
     def get(self, request):
         return TemplateResponse(request, 'login.html')
+
+    def post(self, request):
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        logged_user = authenticate(email=email, password=password)
+        if logged_user:
+            login(request, logged_user)
+            url_next = request.GET.get('next', '/')
+            return redirect(url_next)
+        else:
+            return render(request, 'register.html')
+
+
+class Logout(View):
+
+    def get(self, request):
+        logout(request)
+        return TemplateResponse(request, 'base.html')
 
 
 class Register(View):
@@ -64,22 +82,17 @@ class Register(View):
         return render(request, 'register.html')
 
     def post(self, request):
-        name = request.POST.get['name']
-        surname = request.POST.get['surname']
-        email = request.POST.get['email']
-        password = request.POST.get['password']
-        password_confirmation = request.POST.get['password2']
-        # if password == password_confirmation:
-        #     if User.objects.filter(username=username).exists():
-        #         ctx['error_message'] = 'Taki użytkownik już istnieje'
-        #         return TemplateResponse(request, 'main_app/add_user_form.html', ctx)
-        #     elif password != confirmed_password:
-        #         ctx['error_message'] = 'Podane hasła różnią się'
-        #         return TemplateResponse(request, 'main_app/add_user_form.html', ctx)
-        #     else:
-        #         user = User.objects.create_user(username=username, password=password, first_name=first_name,
-        #                                         last_name=last_name, email=email)
-        #         ctx['message'] = 'Dodano użytkownika'
-        #         login(request, user)
-        #         return redirect('home')
-# Create your views here.
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password_confirmation = request.POST.get('password2')
+        if name and surname and email and password == password_confirmation:
+            user = MyUser.objects.create_user(email=email,
+                                              password=password,
+                                              first_name=name,
+                                              last_name=surname)
+            return render(request, 'login.html')
+        else:
+            return render(request, 'register.html')
+
