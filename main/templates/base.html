@@ -8,6 +8,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
     <link rel="stylesheet" href={% static "css/style.css"%} />
+      <script>
+          var categories = {% autoescape off %}{{ categories_json }}{% endautoescape %}
+          var institutions = {% autoescape off %}{{ institutions_json }}{% endautoescape %}
+      </script>
   </head>
   <body>
   {% block header %}

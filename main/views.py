@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.template.response import TemplateResponse
-from main.models import Category, Institution, Donation, MyUser
+from main.models import Category, Institution, Donation, MyUser, INSTITUTIONS
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout
+import json
 
 
 class LandingPage(View):
@@ -46,10 +47,43 @@ class LandingPage(View):
 class AddDonation(View):
 
     def get(self, request):
+        categories = Category.objects.all()
+        institutions = Institution.objects.all()
+        categories_serializable = categories.values('name')
+        institutions_serializable = institutions.values('name', 'description', 'type', 'categories')
+        ctx = {
+            'categories': categories,
+            'institutions': institutions,
+            'categories_json': json.dumps(list(categories_serializable)),
+            'institutions_json': json.dumps(list(institutions_serializable)),
+        }
         if request.user.is_authenticated:
-            return TemplateResponse(request, 'form.html')
+            return TemplateResponse(request, 'form.html', ctx)
         else:
             return TemplateResponse(request, 'base.html')
+
+    # def post(self, request):
+    #     category = request.POST.get('categories')
+    #     quantity = request.POST.get('bags')
+    #     organization = request.POST.get('organization')
+    #     address = request.POST.get('address')
+    #     city = request.POST.get('city')
+    #     postcode = request.POST.get('postcode')
+    #     phone = request.POST.get('phone')
+    #     date = request.POST.get('data')
+    #     time = request.POST.get('time')
+    #     comment = request.POST.get('more_info')
+    #     print(category)
+    #     print(quantity)
+    #     print(organization)
+    #     print(address)
+    #     print(city)
+    #     print(postcode)
+    #     print(phone)
+    #     print(date)
+    #     print(time)
+    #     print(comment)
+    #     return render(request, 'form-confirmation.html')
 
 
 class Login(View):
@@ -95,4 +129,3 @@ class Register(View):
             return render(request, 'login.html')
         else:
             return render(request, 'register.html')
-

@@ -226,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function() {
       this.slides.forEach(slide => {
         slide.classList.remove("active");
 
-        if (slide.dataset.step == this.currentStep) {
+        if (slide.dataset.step === this.currentStep) {
           slide.classList.add("active");
         }
       });
@@ -252,4 +252,120 @@ document.addEventListener("DOMContentLoaded", function() {
   if (form !== null) {
     new FormSteps(form);
   }
+  console.log(institutions);
+  console.log(categories);
+
+  const checkboxes = Array.from(document.querySelectorAll('input[name=categories]'));
+  const organizations = Array.from(document.querySelectorAll('input[name=organization]'));
+
+  console.log(checkboxes);
+  console.log(organizations);
+
+  // const checked_categories = [];
+  //
+  // checkboxes.forEach(el => {
+  //   el.addEventListener('change', function (e) {
+  //     if (e.currentTarget.checked) {
+  //       console.log('checked');
+  //     } else {
+  //       console.log('not checked');
+  //     }
+  //     if (this.checked && checked_categories.includes(this.value) === false) {
+  //       checked_categories.push(parseInt(this.value));
+  //     }
+  //     if (this.checked === false) {
+  //     const index = checked_categories.indexOf(this.value);
+  //     checked_categories.splice(index, 1);
+  //     }
+  //     console.log(checked_categories);
+  //   })
+  //   // console.log(el.value);
+  //   // console.log(el.checked);
+  // })
+
+  // const selectedCategory = checkboxes.filter(function (element, index, array) {
+  //   return element.checked
+  // })
+  // console.log(selectedCategory)
+  // console.log(checked_categories);
+  // organizations.forEach(el => {
+  //   console.log(el.attributes[3].value);
+  //   console.log(checked_categories.indexOf(parseInt(el.attributes[3].value)))
+  //   if (checked_categories.indexOf(el.attributes[3].value) === -1) {
+  //     el.parentElement.style.display = "none"
+  //   }
+  // })
+
+  const numberOfBagsInput = document.querySelector('input[name="bags"]')
+  const step1 = document.querySelector('div[data-step="1"]')
+  const step2 = document.querySelector('div[data-step="2"]')
+  const step3 = document.querySelector('div[data-step="3"]')
+  const step4 = document.querySelector('div[data-step="4"]')
+  const step5 = document.querySelector('div[data-step="5"]')
+  const summary = document.querySelector('div.summary')
+
+  step1.children[4].children[0].addEventListener('click', function (e) {
+    const selectedCategory = checkboxes.filter(function (element, index, array) {
+    return element.checked
+  })
+  //   organizations.forEach(el => {
+  //     if (el.attributes[3].value !== selectedCategory[0].attributes[2].value) {
+  //       el.parentElement.style.display = "none"
+  //     }
+  // })
+      organizations.forEach(el => {
+        const foundationName = el.parentElement.children[2].children[0].innerHTML
+        const JSONFoundation = institutions.filter(function (element, index, array) {
+          return element.name === foundationName
+        })
+        const foundationCategory = JSONFoundation[0].categories
+        if (foundationCategory !== parseInt(selectedCategory[0].attributes[2].value)) {
+          el.parentElement.style.display = "none"
+        }
+    //     console.log(foundationCategory)
+    // console.log(el.parentElement.children[2].children[0].innerHTML)
+  })
+    summary.children[0].children[1].children[0].children[1].innerHTML = `Przekazujesz ${selectedCategory[0].parentElement.children[2].innerHTML}. `
+  })
+
+  step2.children[2].children[1].addEventListener('click', function (e) {
+    summary.children[0].children[1].children[0].children[1].innerHTML += `Ilość worków: ${numberOfBagsInput.value}`
+  })
+
+  step3.children[4].children[1].addEventListener('click', function (e) {
+    const selectedInstitution = organizations.filter(function (element, index, array) {
+    return element.checked
+  })
+    summary.children[0].children[1].children[1].children[1].innerHTML = `Dla ${selectedInstitution[0].parentElement.children[2].firstElementChild.innerHTML}`
+  })
+
+  step4.children[2].children[1].addEventListener('click', function (e) {
+    const street = document.querySelector('input[name="address"]').value
+    const city = document.querySelector('input[name="city"]').value
+    const postcode = document.querySelector('input[name="postcode"]').value
+    const phone = document.querySelector('input[name="phone"]').value
+    const data = document.querySelector('input[name="data"]').value
+    const time = document.querySelector('input[name="time"]').value
+    const additionalInfo = document.querySelector('textarea[name="more_info"]').value
+
+    summary.children[1].children[0].children[1].children[0].innerHTML = street
+    summary.children[1].children[0].children[1].children[1].innerHTML = city
+    summary.children[1].children[0].children[1].children[2].innerHTML = postcode
+    summary.children[1].children[0].children[1].children[3].innerHTML = phone
+    summary.children[1].children[0].children[1].children[0].innerHTML = street
+    summary.children[1].children[1].children[1].children[0].innerHTML = data
+    summary.children[1].children[1].children[1].children[1].innerHTML = time
+    summary.children[1].children[1].children[1].children[2].innerHTML = additionalInfo
+  })
+
+  step5.children[2].children[1].addEventListener('submit', function (e) {
+    const donation = {
+      'quantity': numberOfBagsInput.value,
+      'categories': selectedCategory[0].attributes[2].value
+
+    }
+  })
+
+  console.log(form)
+
 });
