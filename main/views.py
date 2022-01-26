@@ -95,7 +95,7 @@ class AddDonation(View):
                                                user=user
                                                )
             donation.categories.add(categories)
-            return JsonResponse(data=data, safe=False)
+            return JsonResponse({'url': '/confirm'})
         else:
             return TemplateResponse(request, 'base.html')
 
@@ -152,3 +152,9 @@ class Register(View):
                 return render(request, 'register.html')
         else:
             return render(request, 'register.html')
+
+
+class Confirmation(View):
+
+    def get(self, request):
+        return render(request, 'form-confirmation.html')

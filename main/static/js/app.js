@@ -430,7 +430,7 @@ document.addEventListener("DOMContentLoaded", function() {
         'more_info': additionalInfo
       })
     }).then(res => res.json())
-      .then(res => console.log(res));
+      .then(res => window.location.replace(`http://127.0.0.1:8000${res['url']}`));
   })
 });
 

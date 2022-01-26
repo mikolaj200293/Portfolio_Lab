@@ -1,27 +1,28 @@
 {% extends 'base.html' %}
 {% load static %}
 
-  {% block header_content %}
-    <header class="header--form-page">
-      <nav class="container container--70">
-        <ul class="nav--actions">
-          <li class="logged-user">
-            Witaj Agata
-            <ul class="dropdown">
-              <li><a href="#">Profil</a></li>
-              <li><a href="#">Moje zbiórki</a></li>
-              <li><a href="#">Wyloguj</a></li>
-            </ul>
-          </li>
-        </ul>
-      </nav>
-        {% endblock %}
+{#  {% block header_content %}#}
+{#    <header class="header--form-page">#}
+{#      <nav class="container container--70">#}
+{#        <ul class="nav--actions">#}
+{#          <li class="logged-user">#}
+{#            Witaj Agata#}
+{#            <ul class="dropdown">#}
+{#              <li><a href="#">Profil</a></li>#}
+{#              <li><a href="#">Moje zbiórki</a></li>#}
+{#              <li><a href="#">Wyloguj</a></li>#}
+{#            </ul>#}
+{#          </li>#}
+{#        </ul>#}
+{#      </nav>#}
+{#        {% endblock %}#}
 {% block content %}
       <div class="slogan container container--90">
           <h2>
-            Dziękujemy za przesłanie formularza Na maila prześlemy wszelkie
-            informacje o odbiorze.
+            <p>Dziękujemy za przesłanie formularza.</p>
+              <p>Na maila prześlemy wszelkie informacje o odbiorze.</p>
           </h2>
       </div>
-    </header>
 {% endblock %}
+{#    </header>#}
+
