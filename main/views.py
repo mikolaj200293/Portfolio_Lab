@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.template.response import TemplateResponse
 from main.models import Category, Institution, Donation, MyUser, INSTITUTIONS
+from main.forms import AddUserForm, LoginForm, DonationForm
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse, QueryDict
 import json
 
 
@@ -62,28 +64,40 @@ class AddDonation(View):
         else:
             return TemplateResponse(request, 'base.html')
 
-    # def post(self, request):
-    #     category = request.POST.get('categories')
-    #     quantity = request.POST.get('bags')
-    #     organization = request.POST.get('organization')
-    #     address = request.POST.get('address')
-    #     city = request.POST.get('city')
-    #     postcode = request.POST.get('postcode')
-    #     phone = request.POST.get('phone')
-    #     date = request.POST.get('data')
-    #     time = request.POST.get('time')
-    #     comment = request.POST.get('more_info')
-    #     print(category)
-    #     print(quantity)
-    #     print(organization)
-    #     print(address)
-    #     print(city)
-    #     print(postcode)
-    #     print(phone)
-    #     print(date)
-    #     print(time)
-    #     print(comment)
-    #     return render(request, 'form-confirmation.html')
+    def post(self, request):
+        data = json.load(request)
+        data['bags'] = int(data['bags'])
+        data['categories'] = int(data['categories'])
+        query_dict = QueryDict('', mutable=True)
+        query_dict.update(data)
+        form = DonationForm(query_dict)
+        if form.is_valid():
+            quantity = data['bags']
+            categories = data['categories']
+            institution = Institution.objects.get(name=data['organization'])
+            address = data['address']
+            phone = data['phone']
+            city = data['city']
+            postcode = data['postcode']
+            pick_up_date = data['data']
+            pick_up_time = data['time']
+            pick_up_comment = data['more_info']
+            user = request.user
+            donation = Donation.objects.create(quantity=quantity,
+                                               institution=institution,
+                                               address=address,
+                                               phone_number=phone,
+                                               city=city,
+                                               zip_code=postcode,
+                                               pick_up_date=pick_up_date,
+                                               pick_up_time=pick_up_time,
+                                               pick_up_comment=pick_up_comment,
+                                               user=user
+                                               )
+            donation.categories.add(categories)
+            return JsonResponse(data=data, safe=False)
+        else:
+            return TemplateResponse(request, 'base.html')
 
 
 class Login(View):
@@ -92,15 +106,20 @@ class Login(View):
         return TemplateResponse(request, 'login.html')
 
     def post(self, request):
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        logged_user = authenticate(email=email, password=password)
-        if logged_user:
-            login(request, logged_user)
-            url_next = request.GET.get('next', '/')
-            return redirect(url_next)
+        form = LoginForm(request.POST)
+        print(request.POST)
+        if form.is_valid():
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            logged_user = authenticate(email=email, password=password)
+            if logged_user:
+                login(request, logged_user)
+                url_next = request.GET.get('next', '/')
+                return redirect(url_next)
+            else:
+                return render(request, 'register.html')
         else:
-            return render(request, 'register.html')
+            return TemplateResponse(request, 'login.html')
 
 
 class Logout(View):
@@ -116,16 +135,20 @@ class Register(View):
         return render(request, 'register.html')
 
     def post(self, request):
-        name = request.POST.get('name')
-        surname = request.POST.get('surname')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        password_confirmation = request.POST.get('password2')
-        if name and surname and email and password == password_confirmation:
-            user = MyUser.objects.create_user(email=email,
-                                              password=password,
-                                              first_name=name,
-                                              last_name=surname)
-            return render(request, 'login.html')
+        form = AddUserForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            surname = form.cleaned_data['surname']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            password_confirmation = form.cleaned_data['password2']
+            if name and surname and email and password == password_confirmation:
+                user = MyUser.objects.create_user(email=email,
+                                                  password=password,
+                                                  first_name=name,
+                                                  last_name=surname)
+                return render(request, 'login.html')
+            else:
+                return render(request, 'register.html')
         else:
             return render(request, 'register.html')

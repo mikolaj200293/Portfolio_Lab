@@ -226,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function() {
       this.slides.forEach(slide => {
         slide.classList.remove("active");
 
-        if (slide.dataset.step === this.currentStep) {
+        if (slide.dataset.step == this.currentStep) {
           slide.classList.add("active");
         }
       });
@@ -260,6 +260,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   console.log(checkboxes);
   console.log(organizations);
+
 
   // const checked_categories = [];
   //
@@ -348,6 +349,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const time = document.querySelector('input[name="time"]').value
     const additionalInfo = document.querySelector('textarea[name="more_info"]').value
 
+
     summary.children[1].children[0].children[1].children[0].innerHTML = street
     summary.children[1].children[0].children[1].children[1].innerHTML = city
     summary.children[1].children[0].children[1].children[2].innerHTML = postcode
@@ -365,7 +367,70 @@ document.addEventListener("DOMContentLoaded", function() {
 
     }
   })
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
 
-  console.log(form)
+    let valid = true;
 
+    const selectedCategory = checkboxes.filter(function (element, index, array) {
+    return element.checked
+  })
+    const category = selectedCategory[0].attributes[2].value
+    console.log(category)
+    const quantity = document.querySelector('input[name="bags"]').value
+    const selectedInstitution = organizations.filter(function (element, index, array) {
+    return element.checked
+  })
+    const institution = selectedInstitution[0].parentElement.children[2].firstElementChild.innerHTML
+    const street = document.querySelector('input[name="address"]').value
+    const city = document.querySelector('input[name="city"]').value
+    const postcode = document.querySelector('input[name="postcode"]').value
+    const phone = document.querySelector('input[name="phone"]').value
+    const data = document.querySelector('input[name="data"]').value
+    const time = document.querySelector('input[name="time"]').value
+    const additionalInfo = document.querySelector('textarea[name="more_info"]').value
+    const csrftoken_hidden = document.querySelector('input[name="csrfmiddlewaretoken"]').value
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+  }
+  const csrftoken = getCookie('csrftoken');
+
+    fetch('http://127.0.0.1:8000/add_donation', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRFToken': csrftoken
+      },
+      body: JSON.stringify({
+        'csrfmiddlewaretoken': csrftoken_hidden,
+        'bags': quantity,
+        'categories': category,
+        'organization': institution,
+        'address': street,
+        'phone': phone,
+        'city': city,
+        'postcode': postcode,
+        'data': data,
+        'time': time,
+        'more_info': additionalInfo
+      })
+    }).then(res => res.json())
+      .then(res => console.log(res));
+  })
 });
+
