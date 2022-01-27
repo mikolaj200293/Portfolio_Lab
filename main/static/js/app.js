@@ -256,26 +256,34 @@ document.addEventListener("DOMContentLoaded", function() {
   const checkboxes = Array.from(document.querySelectorAll('input[name=categories]'));
   const organizations = Array.from(document.querySelectorAll('input[name=organization]'));
 
-  const numberOfBagsInput = document.querySelector('input[name="bags"]')
-  const step1 = document.querySelector('div[data-step="1"] button')
-  const step2 = document.querySelector('div[data-step="2"] button + button')
-  const step3 = document.querySelector('div[data-step="3"] button + button')
-  const step4 = document.querySelector('div[data-step="4"] button + button')
-  const step5 = document.querySelector('div[data-step="5"] button + button')
-  const summary = document.querySelector('div.summary')
-  const archive = document.querySelectorAll('#archive-donation')
-
-  if (archive.length > 0) {
-    archive.forEach(el => {
-      el.addEventListener('click', function (e) {
-        
-      })
-    })
-  }
+  const numberOfBagsInput = document.querySelector('input[name="bags"]');
+  const step1 = document.querySelector('div[data-step="1"] button');
+  const step2 = document.querySelector('div[data-step="2"] button + button');
+  const step3 = document.querySelector('div[data-step="3"] button + button');
+  const step4 = document.querySelector('div[data-step="4"] button + button');
+  const step5 = document.querySelector('div[data-step="5"] button + button');
+  const summary = document.querySelector('div.summary');
+  const archive = document.querySelectorAll('#archive-donation');
 
   const selectedCategory = checkboxes.filter(function (element, index, array) {
     return element.checked
   })
+
+  const street = document.querySelector('input[name="address"]').value
+  const city = document.querySelector('input[name="city"]').value
+  const postcode = document.querySelector('input[name="postcode"]').value
+  const phone = document.querySelector('input[name="phone"]').value
+  const data = document.querySelector('input[name="data"]').value
+  const time = document.querySelector('input[name="time"]').value
+  const additionalInfo = document.querySelector('textarea[name="more_info"]').value
+
+  // if (archive.length > 0) {
+  //   archive.forEach(el => {
+  //     el.addEventListener('click', function (e) {
+  //
+  //     })
+  //   })
+  // }
 
   if (step1) {
     step1.addEventListener('click', function (e) {
@@ -304,14 +312,6 @@ document.addEventListener("DOMContentLoaded", function() {
     summary.children[0].children[1].children[1].children[1].innerHTML = `Dla ${selectedInstitution[0].parentElement.children[2].firstElementChild.innerHTML}`
   })
 
-    const street = document.querySelector('input[name="address"]').value
-    const city = document.querySelector('input[name="city"]').value
-    const postcode = document.querySelector('input[name="postcode"]').value
-    const phone = document.querySelector('input[name="phone"]').value
-    const data = document.querySelector('input[name="data"]').value
-    const time = document.querySelector('input[name="time"]').value
-    const additionalInfo = document.querySelector('textarea[name="more_info"]').value
-
   step4.addEventListener('click', function (e) {
     summary.children[1].children[0].children[1].children[0].innerHTML = street
     summary.children[1].children[0].children[1].children[1].innerHTML = city
@@ -327,9 +327,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const donation = {
       'quantity': numberOfBagsInput.value,
       'categories': selectedCategory[0].attributes[2].value
-
     }
   })
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -389,6 +389,5 @@ document.addEventListener("DOMContentLoaded", function() {
       .then(res => window.location.replace(`http://127.0.0.1:8000${res['url']}`));
   })
   }
-
 });
 
