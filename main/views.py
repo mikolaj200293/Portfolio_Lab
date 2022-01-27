@@ -144,18 +144,42 @@ class Register(View):
             password = form.cleaned_data['password']
             password_confirmation = form.cleaned_data['password2']
             if name and surname and email and password == password_confirmation:
-                user = MyUser.objects.create_user(email=email,
-                                                  password=password,
-                                                  first_name=name,
-                                                  last_name=surname)
-                return render(request, 'login.html')
+                user = User.objects.create_user(email=email,
+                                                password=password,
+                                                first_name=name,
+                                                last_name=surname)
+                url_next = request.GET.get('next', '/login')
+                return redirect(url_next)
             else:
-                return render(request, 'register.html')
+                return TemplateResponse(request, 'register.html')
         else:
-            return render(request, 'register.html')
+            return TemplateResponse(request, 'register.html')
 
 
 class Confirmation(View):
 
     def get(self, request):
         return render(request, 'form-confirmation.html')
+
+
+class UserDetails(View):
+
+    def get(self, request):
+        user_donations = Donation.objects.filter(user=request.user)
+        user_donations_serializable = user_donations.values('quantity',
+                                                            'categories',
+                                                            'institution',
+                                                            'address',
+                                                            'phone_number',
+                                                            'city',
+                                                            'zip_code',
+                                                            'pick_up_date',
+                                                            'pick_up_time',
+                                                            'pick_up_comment',
+                                                            'user',
+                                                            'is_taken')
+        ctx = {
+            'donations': user_donations,
+            'donations_json': json.dumps(list(user_donations_serializable), default=str)
+        }
+        return render(request, 'user_details.html', ctx)

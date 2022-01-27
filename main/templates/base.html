@@ -9,8 +9,15 @@
     <title>Document</title>
     <link rel="stylesheet" href={% static "css/style.css"%} />
       <script>
+          {% if categories_json %}
           var categories = {% autoescape off %}{{ categories_json }}{% endautoescape %}
+          {% endif %}
+          {% if institutions_json %}
           var institutions = {% autoescape off %}{{ institutions_json }}{% endautoescape %}
+          {% endif %}
+          {% if donations_json %}
+          var donations = {% autoescape off %}{{ donations_json }}{% endautoescape %}
+          {% endif %}
       </script>
   </head>
   <body>
@@ -22,7 +29,7 @@
           <li class="logged-user">
             Witaj {{ user.first_name }}
             <ul class="dropdown">
-              <li><a href="#">Profil</a></li>
+              <li><a href="{% url 'profile' %}">Profil</a></li>
               <li><a href="#">Ustawienia</a></li>
                 {% if user.is_authenticated and request.user.is_admin %}
                <li><a href="http://127.0.0.1:8000/admin">Panel administracyjny</a></li>

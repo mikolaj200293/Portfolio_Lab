@@ -12,7 +12,7 @@ INSTITUTIONS = (
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, first_name, password=None):
+    def create_user(self, email, first_name, last_name, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -23,13 +23,14 @@ class MyUserManager(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email),
             first_name=first_name,
+            last_name=last_name
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, first_name, password):
+    def create_superuser(self, email, first_name, last_name, password):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
@@ -38,6 +39,7 @@ class MyUserManager(BaseUserManager):
             email,
             password=password,
             first_name=first_name,
+            last_name=last_name
         )
         user.is_admin = True
         user.is_superuser = True
@@ -52,6 +54,7 @@ class MyUser(AbstractBaseUser):
         unique=True,
     )
     first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -132,6 +135,10 @@ class Donation(models.Model):
     pick_up_time = models.TimeField(verbose_name='Godzina odbioru')
     pick_up_comment = models.TextField(max_length=1000, verbose_name='Komentarz')
     user = models.ForeignKey(User_set, on_delete=models.CASCADE, verbose_name='Użytkownik')
+    is_taken = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Przekazanie {self.categories.all()[0]} dla {self.institution}"
 
     class Meta:
         verbose_name = 'Darowizna'

@@ -263,11 +263,22 @@ document.addEventListener("DOMContentLoaded", function() {
   const step4 = document.querySelector('div[data-step="4"] button + button')
   const step5 = document.querySelector('div[data-step="5"] button + button')
   const summary = document.querySelector('div.summary')
+  const archive = document.querySelectorAll('#archive-donation')
 
-  step1.addEventListener('click', function (e) {
-    const selectedCategory = checkboxes.filter(function (element, index, array) {
+  if (archive.length > 0) {
+    archive.forEach(el => {
+      el.addEventListener('click', function (e) {
+        
+      })
+    })
+  }
+
+  const selectedCategory = checkboxes.filter(function (element, index, array) {
     return element.checked
   })
+
+  if (step1) {
+    step1.addEventListener('click', function (e) {
 
       organizations.forEach(el => {
         const foundationName = el.parentElement.children[2].children[0].innerHTML
@@ -293,7 +304,6 @@ document.addEventListener("DOMContentLoaded", function() {
     summary.children[0].children[1].children[1].children[1].innerHTML = `Dla ${selectedInstitution[0].parentElement.children[2].firstElementChild.innerHTML}`
   })
 
-  step4.addEventListener('click', function (e) {
     const street = document.querySelector('input[name="address"]').value
     const city = document.querySelector('input[name="city"]').value
     const postcode = document.querySelector('input[name="postcode"]').value
@@ -302,7 +312,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const time = document.querySelector('input[name="time"]').value
     const additionalInfo = document.querySelector('textarea[name="more_info"]').value
 
-
+  step4.addEventListener('click', function (e) {
     summary.children[1].children[0].children[1].children[0].innerHTML = street
     summary.children[1].children[0].children[1].children[1].innerHTML = city
     summary.children[1].children[0].children[1].children[2].innerHTML = postcode
@@ -335,13 +345,6 @@ document.addEventListener("DOMContentLoaded", function() {
     return element.checked
   })
     const institution = selectedInstitution[0].parentElement.children[2].firstElementChild.innerHTML
-    const street = document.querySelector('input[name="address"]').value
-    const city = document.querySelector('input[name="city"]').value
-    const postcode = document.querySelector('input[name="postcode"]').value
-    const phone = document.querySelector('input[name="phone"]').value
-    const data = document.querySelector('input[name="data"]').value
-    const time = document.querySelector('input[name="time"]').value
-    const additionalInfo = document.querySelector('textarea[name="more_info"]').value
     const csrftoken_hidden = document.querySelector('input[name="csrfmiddlewaretoken"]').value
     function getCookie(name) {
     let cookieValue = null;
@@ -385,5 +388,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }).then(res => res.json())
       .then(res => window.location.replace(`http://127.0.0.1:8000${res['url']}`));
   })
+  }
+
 });
 
