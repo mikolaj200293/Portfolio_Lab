@@ -1,7 +1,9 @@
 from django import forms
 from django.core.validators import EmailValidator
-from main.models import Category, Institution
-from portfoliolab import settings
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
+
+User = get_user_model()
 
 
 class AddUserForm(forms.Form):

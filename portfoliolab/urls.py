@@ -18,7 +18,7 @@ from django.urls import path
 from main.views import LandingPage, AddDonation, Login, Register, Logout, Confirmation
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path('', LandingPage.as_view(), name='home'),
     path('add_donation', AddDonation.as_view(), name='add-donation'),
     path('login', Login.as_view(), name='login'),

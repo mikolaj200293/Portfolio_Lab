@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.template.response import TemplateResponse
-from main.models import Category, Institution, Donation, MyUser, INSTITUTIONS
+from main.models import Category, Institution, Donation
 from main.forms import AddUserForm, LoginForm, DonationForm
 from django.core.paginator import Paginator
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.http import JsonResponse, QueryDict
 import json
+
+User = get_user_model()
 
 
 class LandingPage(View):
@@ -107,7 +109,6 @@ class Login(View):
 
     def post(self, request):
         form = LoginForm(request.POST)
-        print(request.POST)
         if form.is_valid():
             email = request.POST.get('email')
             password = request.POST.get('password')

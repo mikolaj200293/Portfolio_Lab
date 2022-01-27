@@ -24,6 +24,9 @@
             <ul class="dropdown">
               <li><a href="#">Profil</a></li>
               <li><a href="#">Ustawienia</a></li>
+                {% if user.is_authenticated and request.user.is_admin %}
+               <li><a href="http://127.0.0.1:8000/admin">Panel administracyjny</a></li>
+                {% endif %}
               <li><a href="{% url 'logout' %}">Wyloguj</a></li>
             </ul>
           </li>
