@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
@@ -88,12 +87,20 @@ class MyUser(AbstractBaseUser):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
+    class Meta:
+        verbose_name = 'Użytkownik'
+        verbose_name_plural = 'Użytkownicy'
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name='Kategoria')
 
     def __str__(self):
         return f"{self.name}"
+
+    class Meta:
+        verbose_name = 'Kategoria'
+        verbose_name_plural = 'Kategorie'
 
 
 class Institution(models.Model):
@@ -104,6 +111,10 @@ class Institution(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+    class Meta:
+        verbose_name = 'Instytucja'
+        verbose_name_plural = 'Instytucje'
 
 
 User_set = settings.AUTH_USER_MODEL
@@ -121,3 +132,8 @@ class Donation(models.Model):
     pick_up_time = models.TimeField(verbose_name='Godzina odbioru')
     pick_up_comment = models.TextField(max_length=1000, verbose_name='Komentarz')
     user = models.ForeignKey(User_set, on_delete=models.CASCADE, verbose_name='Użytkownik')
+
+    class Meta:
+        verbose_name = 'Darowizna'
+        verbose_name_plural = 'Darowizny'
+
