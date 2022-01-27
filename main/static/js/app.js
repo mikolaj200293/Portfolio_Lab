@@ -265,17 +265,6 @@ document.addEventListener("DOMContentLoaded", function() {
   const summary = document.querySelector('div.summary');
   const archive = document.querySelectorAll('#archive-donation');
 
-  const selectedCategory = checkboxes.filter(function (element, index, array) {
-    return element.checked
-  })
-
-  const street = document.querySelector('input[name="address"]').value
-  const city = document.querySelector('input[name="city"]').value
-  const postcode = document.querySelector('input[name="postcode"]').value
-  const phone = document.querySelector('input[name="phone"]').value
-  const data = document.querySelector('input[name="data"]').value
-  const time = document.querySelector('input[name="time"]').value
-  const additionalInfo = document.querySelector('textarea[name="more_info"]').value
 
   // if (archive.length > 0) {
   //   archive.forEach(el => {
@@ -288,6 +277,9 @@ document.addEventListener("DOMContentLoaded", function() {
   if (step1) {
     step1.addEventListener('click', function (e) {
 
+      const selectedCategory = checkboxes.filter(function (element, index, array) {
+      return element.checked
+  })
       organizations.forEach(el => {
         const foundationName = el.parentElement.children[2].children[0].innerHTML
         const JSONFoundation = institutions.filter(function (element, index, array) {
@@ -313,6 +305,15 @@ document.addEventListener("DOMContentLoaded", function() {
   })
 
   step4.addEventListener('click', function (e) {
+
+    const street = document.querySelector('input[name="address"]').value
+    const city = document.querySelector('input[name="city"]').value
+    const postcode = document.querySelector('input[name="postcode"]').value
+    const phone = document.querySelector('input[name="phone"]').value
+    const data = document.querySelector('input[name="data"]').value
+    const time = document.querySelector('input[name="time"]').value
+    const additionalInfo = document.querySelector('textarea[name="more_info"]').value
+
     summary.children[1].children[0].children[1].children[0].innerHTML = street
     summary.children[1].children[0].children[1].children[1].innerHTML = city
     summary.children[1].children[0].children[1].children[2].innerHTML = postcode
@@ -333,7 +334,13 @@ document.addEventListener("DOMContentLoaded", function() {
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
-    let valid = true;
+    const street = document.querySelector('input[name="address"]').value
+    const city = document.querySelector('input[name="city"]').value
+    const postcode = document.querySelector('input[name="postcode"]').value
+    const phone = document.querySelector('input[name="phone"]').value
+    const data = document.querySelector('input[name="data"]').value
+    const time = document.querySelector('input[name="time"]').value
+    const additionalInfo = document.querySelector('textarea[name="more_info"]').value
 
     const selectedCategory = checkboxes.filter(function (element, index, array) {
     return element.checked
