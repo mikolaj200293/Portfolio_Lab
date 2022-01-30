@@ -1,15 +1,13 @@
-# Cookee
+# Oddam w dobre ręce
 
-Cookee to aplikacja, w której każdy użytkownik może zarządzać planem żywieniowym swoim i swoich bliskich oraz generować listy zakupów niezbędnych do ich realizacji.
+"Oddam w dobre ręce" to aplikacja pozwalająca na przekazanie niepotrzebnych nam rzeczy organizacjom dobroczynnym zajmującym się ich redystrybucją wśród osób potrzebujących
 
-Każdy użytkownik może założyć sobie konto, dzięki któremu może definiować swoje własne produkty spożywcze o kaloryczności obliczanej na podstawie ich makroskładników. Ze zdefiniowanych produktów można tworzyć dowolne przepisy kulinarne, dla dowolnej ilości osób.
+Każdy użytkownik może założyć konto, dzięki któremu otrzymuje dostęp do listy artykułów oraz instytucji, którym można te artykuły przekazać. 
 
-Aplikacja pozwala na definiowanie profili osób, dla których chcemy przygotować plan żywieniowy. W oparciu o zapotrzebowanie kaloryczne poszczególnych osób, dla których użytkownik chce przygotować posiłki oraz kaloryczność zdefiniowanych przepisów możliwe jest utworzenie planu żywieniowego o dowolnej długości.
+Poprzez formularz definiuje się swoją darowiznę podając co użytkownik chce przekazać, w jakiej ilości oraz do jakiej instytucji. Na koniec użytkownik podaje miejsce i termin odbioru oraz uwagi dla kuriera. Po potwierdzeniu danych zostaje złożone zamówienie.
 
-Aplikacja pozwala na przypisane dowolnego przepisu do danego posiłku w ciągu dnia, w dowolnie wybranej przez siebie ilości porcji. Przy wyborze dań użytkownik nie może przekroczyć dobowej ilości kalorii wynikającej z zapotrzebowania osób, dla których sporządza się plan.
+Wszystkie zamówienia użytkownika są archiwizowane w jego profilu.
 
-W przypadku zbyt małej ilości kalorii dla całego dnia użytkownik ma możliwość dopełnienia kaloryczności do porządanej wartości, zwiększając ilość porcji wybranego dania.
+Aplikacja posiada panel administratora pozwalający na zarządzanie użytkownikami oraz wprowadzanie nowych instytucji i rodzajów artykułów, które można przekazać. 
 
-Dla zdefiniowanego planu żywieniowego użytkownik ma możliwość wygenerowania do PDF listy zakupów obejmującej niezbędne do jego realizacji produkty, z podziałem na poszczególne kategorie (warzywa, owoce, pieczywo itd.).
-
-Dzięki aplikacji zarządzanie dietą swoją i bliskich staje się łatwiejsze.
+Dzięki aplikacji użytkownik może pozbyć się niepotrzebnych już rzeczy, które dla innych mogą okazać się bezcennym darem.
