@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function() {
      */
     updateForm() {
       this.$step.innerText = this.currentStep;
-
+      console.log(this.currentStep)
       // TODO: Validation
 
       this.slides.forEach(slide => {
@@ -234,6 +234,10 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
+      if (this.$step === 1) {
+
+      }
+
       // TODO: get data from inputs and show them in summary
     }
 
@@ -246,7 +250,10 @@ document.addEventListener("DOMContentLoaded", function() {
       e.preventDefault();
       this.currentStep++;
       this.updateForm();
+      console.log(this.$step)
+    //  Można dodać if
     }
+  //  Można dodać dodatkowe metody zależne od kroku
   }
   const form = document.querySelector(".form--steps");
   if (form !== null) {
