@@ -1,6 +1,6 @@
 # Oddam w dobre ręce
 
-"Oddam w dobre ręce" to aplikacja pozwalająca na przekazanie niepotrzebnych nam rzeczy organizacjom dobroczynnym zajmującym się ich redystrybucją wśród osób potrzebujących
+"Oddam w dobre ręce" to aplikacja pozwalająca na przekazanie niepotrzebnych nam rzeczy organizacjom dobroczynnym zajmującym się ich redystrybucją wśród osób potrzebujących.
 
 Każdy użytkownik może założyć konto, dzięki któremu otrzymuje dostęp do listy artykułów oraz instytucji, którym można te artykuły przekazać. 
 
