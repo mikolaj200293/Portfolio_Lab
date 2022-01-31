@@ -35,3 +35,6 @@ class DonationForm(forms.Form):
     more_info = forms.Textarea()
 
 
+class ArchiveForm(forms.Form):
+    donation_id = forms.IntegerField()
+    is_taken = forms.NullBooleanField()

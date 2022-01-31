@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.template.response import TemplateResponse
 from main.models import Category, Institution, Donation
-from main.forms import AddUserForm, LoginForm, DonationForm
+from main.forms import AddUserForm, LoginForm, DonationForm, ArchiveForm
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.http import JsonResponse, QueryDict
 import json
+from django.views.decorators.csrf import csrf_exempt
 
 User = get_user_model()
 
@@ -99,7 +100,7 @@ class AddDonation(View):
             donation.categories.add(categories)
             return JsonResponse({'url': '/confirm'})
         else:
-            return TemplateResponse(request, 'base.html')
+            return JsonResponse({'url': ''})
 
 
 class Login(View):
@@ -165,8 +166,9 @@ class Confirmation(View):
 class UserDetails(View):
 
     def get(self, request):
-        user_donations = Donation.objects.filter(user=request.user)
-        user_donations_serializable = user_donations.values('quantity',
+        user_donations = Donation.objects.filter(user=request.user).order_by('pk')
+        user_donations_serializable = user_donations.values('id',
+                                                            'quantity',
                                                             'categories',
                                                             'institution',
                                                             'address',
@@ -183,3 +185,20 @@ class UserDetails(View):
             'donations_json': json.dumps(list(user_donations_serializable), default=str)
         }
         return render(request, 'user_details.html', ctx)
+
+    def post(self, request):
+        data = json.load(request)
+        data['donation_id'] = int(data['donation_id'])
+        data['is_taken'] = bool(data['is_taken'])
+        query_dict = QueryDict('', mutable=True)
+        query_dict.update(data)
+        form = ArchiveForm(query_dict)
+        if form.is_valid():
+            is_taken = data['is_taken']
+            donation_id = data['donation_id']
+            donation = Donation.objects.get(pk=donation_id)
+            donation.is_taken = is_taken
+            donation.save()
+            return JsonResponse({"url": "/profile"})
+        else:
+            return JsonResponse({"url": "/profile"})

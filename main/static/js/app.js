@@ -220,7 +220,6 @@ document.addEventListener("DOMContentLoaded", function() {
      */
     updateForm() {
       this.$step.innerText = this.currentStep;
-      console.log(this.currentStep)
       // TODO: Validation
 
       this.slides.forEach(slide => {
@@ -234,9 +233,112 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
-      if (this.$step === 1) {
+      const summary = document.querySelector('div.summary');
+      const checkboxes = Array.from(document.querySelectorAll('input[name=categories]'));
+      const organizations = Array.from(document.querySelectorAll('input[name=organization]'));
+      const numberOfBagsInput = document.querySelector('input[name="bags"]');
+      const street = document.querySelector('input[name="address"]').value;
+      const city = document.querySelector('input[name="city"]').value;
+      const postcode = document.querySelector('input[name="postcode"]').value;
+      const phone = document.querySelector('input[name="phone"]').value;
+      const data = document.querySelector('input[name="data"]').value;
+      const time = document.querySelector('input[name="time"]').value;
+      const additionalInfo = document.querySelector('textarea[name="more_info"]').value;
 
+      if (this.currentStep === 2) {
+        const selectedCategory = checkboxes.filter(function (element, index, array) {
+        return element.checked
+        });
+        organizations.forEach(el => {
+        const foundationName = el.parentElement.children[2].children[0].innerHTML;
+        const JSONFoundation = institutions.filter(function (element, index, array) {
+          return element.name === foundationName
+        });
+        const foundationCategory = JSONFoundation[0].categories;
+        if (foundationCategory !== parseInt(selectedCategory[0].attributes[2].value)) {
+          el.parentElement.style.display = "none";
+        }
+        });
+        summary.children[0].children[1].children[0].children[1].innerHTML = `Przekazujesz ${selectedCategory[0].parentElement.children[2].innerHTML}. `;
+        }
+
+      if (this.currentStep === 3) {
+        summary.children[0].children[1].children[0].children[1].innerHTML += `Ilość worków: ${numberOfBagsInput.value}`;
       }
+
+      if (this.currentStep === 4) {
+        const selectedInstitution = organizations.filter(function (element, index, array) {
+        return element.checked
+        });
+        summary.children[0].children[1].children[1].children[1].innerHTML = `Dla ${selectedInstitution[0].parentElement.children[2].firstElementChild.innerHTML}`;
+      }
+
+      if (this.currentStep === 5) {
+        summary.children[1].children[0].children[1].children[0].innerHTML = street;
+        summary.children[1].children[0].children[1].children[1].innerHTML = city;
+        summary.children[1].children[0].children[1].children[2].innerHTML = postcode;
+        summary.children[1].children[0].children[1].children[3].innerHTML = phone;
+        summary.children[1].children[0].children[1].children[0].innerHTML = street;
+        summary.children[1].children[1].children[1].children[0].innerHTML = data;
+        summary.children[1].children[1].children[1].children[1].innerHTML = time;
+        summary.children[1].children[1].children[1].children[2].innerHTML = additionalInfo;
+      }
+
+      if (this.currentStep === 6) {
+        this.submit(event);
+        const selectedCategory = checkboxes.filter(function (element, index, array) {
+        return element.checked
+      });
+        const category = selectedCategory[0].attributes[2].value;
+        const quantity = document.querySelector('input[name="bags"]').value;
+        const selectedInstitution = organizations.filter(function (element, index, array) {
+        return element.checked
+      });
+        const institution = selectedInstitution[0].parentElement.children[2].firstElementChild.innerHTML;
+        const csrftoken_hidden = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+      }
+      const csrftoken = getCookie('csrftoken');
+
+        fetch('http://127.0.0.1:8000/add_donation', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrftoken
+          },
+          body: JSON.stringify({
+            'csrfmiddlewaretoken': csrftoken_hidden,
+            'bags': quantity,
+            'categories': category,
+            'organization': institution,
+            'address': street,
+            'phone': phone,
+            'city': city,
+            'postcode': postcode,
+            'data': data,
+            'time': time,
+            'more_info': additionalInfo
+          })
+        }).then(res => res.json())
+          .then(res => window.location.replace(`http://127.0.0.1:8000${res['url']}`));
+      }
+
 
       // TODO: get data from inputs and show them in summary
     }
@@ -250,158 +352,60 @@ document.addEventListener("DOMContentLoaded", function() {
       e.preventDefault();
       this.currentStep++;
       this.updateForm();
-      console.log(this.$step)
-    //  Można dodać if
     }
-  //  Można dodać dodatkowe metody zależne od kroku
   }
   const form = document.querySelector(".form--steps");
   if (form !== null) {
     new FormSteps(form);
   }
 
-  const checkboxes = Array.from(document.querySelectorAll('input[name=categories]'));
-  const organizations = Array.from(document.querySelectorAll('input[name=organization]'));
+      const archive_button = document.querySelectorAll('.archive-donation')
 
-  const numberOfBagsInput = document.querySelector('input[name="bags"]');
-  const step1 = document.querySelector('div[data-step="1"] button');
-  const step2 = document.querySelector('div[data-step="2"] button + button');
-  const step3 = document.querySelector('div[data-step="3"] button + button');
-  const step4 = document.querySelector('div[data-step="4"] button + button');
-  const step5 = document.querySelector('div[data-step="5"] button + button');
-  const summary = document.querySelector('div.summary');
-  const archive = document.querySelectorAll('#archive-donation');
-
-
-  // if (archive.length > 0) {
-  //   archive.forEach(el => {
-  //     el.addEventListener('click', function (e) {
-  //
-  //     })
-  //   })
-  // }
-
-  if (step1) {
-    step1.addEventListener('click', function (e) {
-
-      const selectedCategory = checkboxes.filter(function (element, index, array) {
-      return element.checked
-  })
-      organizations.forEach(el => {
-        const foundationName = el.parentElement.children[2].children[0].innerHTML
-        const JSONFoundation = institutions.filter(function (element, index, array) {
-          return element.name === foundationName
-        })
-        const foundationCategory = JSONFoundation[0].categories
-        if (foundationCategory !== parseInt(selectedCategory[0].attributes[2].value)) {
-          el.parentElement.style.display = "none"
-        }
-  })
-    summary.children[0].children[1].children[0].children[1].innerHTML = `Przekazujesz ${selectedCategory[0].parentElement.children[2].innerHTML}. `
-  })
-
-  step2.addEventListener('click', function (e) {
-    summary.children[0].children[1].children[0].children[1].innerHTML += `Ilość worków: ${numberOfBagsInput.value}`
-  })
-
-  step3.addEventListener('click', function (e) {
-    const selectedInstitution = organizations.filter(function (element, index, array) {
-    return element.checked
-  })
-    summary.children[0].children[1].children[1].children[1].innerHTML = `Dla ${selectedInstitution[0].parentElement.children[2].firstElementChild.innerHTML}`
-  })
-
-  step4.addEventListener('click', function (e) {
-
-    const street = document.querySelector('input[name="address"]').value
-    const city = document.querySelector('input[name="city"]').value
-    const postcode = document.querySelector('input[name="postcode"]').value
-    const phone = document.querySelector('input[name="phone"]').value
-    const data = document.querySelector('input[name="data"]').value
-    const time = document.querySelector('input[name="time"]').value
-    const additionalInfo = document.querySelector('textarea[name="more_info"]').value
-
-    summary.children[1].children[0].children[1].children[0].innerHTML = street
-    summary.children[1].children[0].children[1].children[1].innerHTML = city
-    summary.children[1].children[0].children[1].children[2].innerHTML = postcode
-    summary.children[1].children[0].children[1].children[3].innerHTML = phone
-    summary.children[1].children[0].children[1].children[0].innerHTML = street
-    summary.children[1].children[1].children[1].children[0].innerHTML = data
-    summary.children[1].children[1].children[1].children[1].innerHTML = time
-    summary.children[1].children[1].children[1].children[2].innerHTML = additionalInfo
-  })
-
-  step5.addEventListener('submit', function (e) {
-    const donation = {
-      'quantity': numberOfBagsInput.value,
-      'categories': selectedCategory[0].attributes[2].value
-    }
-  })
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const street = document.querySelector('input[name="address"]').value
-    const city = document.querySelector('input[name="city"]').value
-    const postcode = document.querySelector('input[name="postcode"]').value
-    const phone = document.querySelector('input[name="phone"]').value
-    const data = document.querySelector('input[name="data"]').value
-    const time = document.querySelector('input[name="time"]').value
-    const additionalInfo = document.querySelector('textarea[name="more_info"]').value
-
-    const selectedCategory = checkboxes.filter(function (element, index, array) {
-    return element.checked
-  })
-    const category = selectedCategory[0].attributes[2].value
-    console.log(category)
-    const quantity = document.querySelector('input[name="bags"]').value
-    const selectedInstitution = organizations.filter(function (element, index, array) {
-    return element.checked
-  })
-    const institution = selectedInstitution[0].parentElement.children[2].firstElementChild.innerHTML
-    const csrftoken_hidden = document.querySelector('input[name="csrfmiddlewaretoken"]').value
-    function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+        function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
         }
-    }
-    return cookieValue;
-  }
-  const csrftoken = getCookie('csrftoken');
+        return cookieValue;
+      }
+      const csrftoken = getCookie('csrftoken');
 
-    fetch('http://127.0.0.1:8000/add_donation', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-        'X-CSRFToken': csrftoken
-      },
-      body: JSON.stringify({
-        'csrfmiddlewaretoken': csrftoken_hidden,
-        'bags': quantity,
-        'categories': category,
-        'organization': institution,
-        'address': street,
-        'phone': phone,
-        'city': city,
-        'postcode': postcode,
-        'data': data,
-        'time': time,
-        'more_info': additionalInfo
+      archive_button.forEach((el, index) => {
+        const donation = document.querySelector(`#donation-${index + 1}`)
+        if (donations[index].is_taken === true) {
+            donation.style.color = "grey"
+            donation.className = "strike"
+          }
+        el.addEventListener('click', function (e) {
+          let is_taken = true
+          if (donations[index].is_taken === true) {
+            is_taken = false
+          }
+          const donation_id = donations[index].id
+          fetch('http://127.0.0.1:8000/profile', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrftoken
+          },
+          body: JSON.stringify({
+            "donation_id": donation_id,
+            "is_taken": is_taken,
+          })
+        }).then(res => res.json())
+          .then(res => window.location.replace(`http://127.0.0.1:8000${res['url']}`));
+        })
       })
-    }).then(res => res.json())
-      .then(res => window.location.replace(`http://127.0.0.1:8000${res['url']}`));
-  })
-  }
 });
 
