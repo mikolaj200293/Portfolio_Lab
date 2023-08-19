@@ -1,13 +1,15 @@
 # Oddam w dobre ręce
 
-"Oddam w dobre ręce" to aplikacja pozwalająca na przekazanie niepotrzebnych nam rzeczy organizacjom dobroczynnym zajmującym się ich redystrybucją wśród osób potrzebujących.
+"Oddam w dobre ręce" is an application that allows us to donate our unwanted items to charitable organizations that redistribute them to people in need.
 
-Każdy użytkownik może założyć konto, dzięki któremu otrzymuje dostęp do listy artykułów oraz instytucji, którym można te artykuły przekazać. 
+Each user can create an account, thanks to which he gets access to a list of items and institutions to which these items can be donated. 
 
-Poprzez formularz definiuje się swoją darowiznę podając co użytkownik chce przekazać, w jakiej ilości oraz do jakiej instytucji. Na koniec użytkownik podaje miejsce i termin odbioru oraz uwagi dla kuriera. Po potwierdzeniu danych zostaje złożone zamówienie.
+Through the form, one defines one's donation by specifying what the user wants to donate, in what quantity and to which institution. Finally, the user specifies the place and date of collection and comments for the courier. After confirming the data, the order is placed.
 
-Wszystkie zamówienia użytkownika są archiwizowane w jego profilu.
+All the user's orders are archived in his profile.
 
-Aplikacja posiada panel administratora pozwalający na zarządzanie użytkownikami oraz wprowadzanie nowych instytucji i rodzajów artykułów, które można przekazać. 
+The application has an administrator panel that allows the user to manage and enter new institutions and types of items that can be donated. 
 
-Dzięki aplikacji użytkownik może pozbyć się niepotrzebnych już rzeczy, które dla innych mogą okazać się bezcennym darem.
+Thanks to the application, the user can get rid of items that are no longer needed, which may turn out to be a priceless gift for others.
+
+Translated with www.DeepL.com/Translator (free version)
